@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class SpendingItem {
+  final String id;
   final String itemName;
   final String store;
   final double cost;
@@ -8,6 +9,7 @@ class SpendingItem {
   final String description;
 
   SpendingItem({
+    required this.id,
     required this.itemName,
     required this.store,
     required this.cost,
@@ -27,6 +29,7 @@ class SpendingItem {
 
   factory SpendingItem.fromMap(Map<String, dynamic> map) {
     return SpendingItem(
+      id: map['id'],
       itemName: map['itemName'],
       store: map['store'],
       cost: map['cost'],
@@ -37,5 +40,6 @@ class SpendingItem {
 
   String toJson() => json.encode(toMap());
 
-  factory SpendingItem.fromJson(String source) => SpendingItem.fromMap(json.decode(source));
+  factory SpendingItem.fromJson(String source) =>
+      SpendingItem.fromMap(json.decode(source));
 }
