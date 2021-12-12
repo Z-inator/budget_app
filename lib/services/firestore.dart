@@ -1,4 +1,5 @@
 import 'package:budget_app/models/spending_item.dart';
+import 'package:budget_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Database {
@@ -15,8 +16,8 @@ class Database {
                     SpendingItem.fromMap(snapshot.data()!),
                 toFirestore: (spendingItem, _) => spendingItem!.toMap());
 
-  Future<DocumentSnapshot> readSpendingItem(String id) {
-    return spendingItemReference.doc(id).get();
+  Stream<QuerySnapshot> spendingItemStream() {
+    return spendingItemReference.snapshots();
   }
 
   Future<void> addSpendingItem(SpendingItem item) {
