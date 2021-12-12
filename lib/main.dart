@@ -1,3 +1,6 @@
+import 'package:budget_app/services/authentification.dart';
+import 'package:budget_app/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +8,7 @@ import 'package:budget_app/components/budget_bar.dart';
 import 'package:budget_app/components/item_list.dart';
 import 'package:budget_app/components/new_item_button.dart';
 import 'package:budget_app/models/spending_item.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,12 +51,27 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      appBar: MonthBudgetBar(),
-      body: ItemList(items: items),
-      floatingActionButton: NewItemButton(),
-    ));
+    AuthService authService = AuthService();
+    return StreamBuilder<User?>(
+        stream: authService.onAuthChanged,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ChangeNotifierProvider<Database>(
+              create: (context) => Database(user: snapshot.data!),
+              builder: (context, child) {
+                return SafeArea(
+                    child: Scaffold(
+                  appBar: MonthBudgetBar(),
+                  body: ItemList(items: items),
+                  floatingActionButton: NewItemButton(),
+                ));
+              },
+            );
+          } else if (snapshot.hasError) {
+            return ErrorPage(errorMessage: snapshot.error.toString());
+          }
+          return LoadingPage();
+        });
   }
 }
 
@@ -79,7 +98,10 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: CircularProgressIndicator(),));
+    return SafeArea(
+        child: Scaffold(
+      body: CircularProgressIndicator(),
+    ));
   }
 }
 
