@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class SpendingItem {
-  final String id;
+  final DocumentReference reference;
+  final DateTime createDate;
   final String itemName;
   final String store;
   final double cost;
@@ -9,7 +12,8 @@ class SpendingItem {
   final String description;
 
   SpendingItem({
-    required this.id,
+    required this.reference,
+    required this.createDate,
     required this.itemName,
     required this.store,
     required this.cost,
@@ -19,6 +23,7 @@ class SpendingItem {
 
   Map<String, dynamic> toMap() {
     return {
+      'createDate': createDate.millisecondsSinceEpoch,
       'itemName': itemName,
       'store': store,
       'cost': cost,
@@ -27,9 +32,10 @@ class SpendingItem {
     };
   }
 
-  factory SpendingItem.fromMap(Map<String, dynamic> map) {
+  factory SpendingItem.fromMap(Map<String, dynamic> map, DocumentReference reference) {
     return SpendingItem(
-      id: map['id'],
+      reference: reference,
+      createDate: (map['createDate'] as Timestamp).toDate(),
       itemName: map['itemName'],
       store: map['store'],
       cost: map['cost'],
@@ -37,9 +43,4 @@ class SpendingItem {
       description: map['description'],
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory SpendingItem.fromJson(String source) =>
-      SpendingItem.fromMap(json.decode(source));
 }
