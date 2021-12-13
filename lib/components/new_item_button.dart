@@ -20,6 +20,25 @@ class NewItemButton extends StatelessWidget {
   }
 }
 
+class EditItemButton extends StatelessWidget {
+  final SpendingItem spendingItem;
+  const EditItemButton({Key? key, required this.spendingItem})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Database database = Provider.of<Database>(context);
+    return FloatingActionButton(
+      onPressed: () => showModalBottomSheet(
+          context: context,
+          builder: (context) => ChangeNotifierProvider<EditItemProvider>(
+              create: (context) => EditItemProvider(
+                  spendingItem: spendingItem),
+              child: EditSpendingItem())),
+    );
+  }
+}
+
 class EditSpendingItem extends StatelessWidget {
   const EditSpendingItem({Key? key}) : super(key: key);
 
