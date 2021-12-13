@@ -40,7 +40,7 @@ class Database with ChangeNotifier {
 
   Future<void> updateSpendingItem(SpendingItem item) {
     return spendingItemReference
-        .doc(item.reference.id)
+        .doc(item.reference)
         .update(item.toMap())
         .then((value) => print("Spending Item Updated"))
         .catchError((error) => print('Failed to update Spending Item: $error'));
@@ -48,7 +48,7 @@ class Database with ChangeNotifier {
 
   Future deleteSpendingItem(SpendingItem item) {
     return spendingItemReference
-        .doc(item.reference.id)
+        .doc(item.reference)
         .delete()
         .then((value) => print("Spending Item Deleted"))
         .catchError((error) => print('Failed to delete Spending Item: $error'));

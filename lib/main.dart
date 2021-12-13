@@ -63,7 +63,9 @@ class HomePage extends StatelessWidget {
                     child: Scaffold(
                   appBar: MonthBudgetBar(),
                   body: ItemList(items: items),
-                  floatingActionButton: NewItemButton(),
+                  floatingActionButton: EditItemButton(
+                    spendingItem: SpendingItem(createDate: DateTime.now()),
+                  ),
                 ));
               },
             );

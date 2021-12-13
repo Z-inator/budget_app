@@ -29,7 +29,8 @@ class SpendingItem {
     };
   }
 
-  factory SpendingItem.fromMap(Map<String, dynamic> map, DocumentReference reference) {
+  factory SpendingItem.fromMap(
+      Map<String, dynamic> map, DocumentReference reference) {
     return SpendingItem(
       reference: reference.id,
       createDate: (map['createDate'] as Timestamp).toDate(),
@@ -42,12 +43,11 @@ class SpendingItem {
 
   factory SpendingItem.copySpendingItem(SpendingItem oldSpendingItem) {
     return SpendingItem(
-      reference: oldSpendingItem.reference,
-      createDate: oldSpendingItem.createDate,
-      name: oldSpendingItem.name,
-      vendor: oldSpendingItem.vendor,
-      cost: oldSpendingItem.cost,
-      description: oldSpendingItem.description
-    )
+        reference: oldSpendingItem.reference,
+        createDate: oldSpendingItem.createDate,
+        name: oldSpendingItem.name,
+        vendor: oldSpendingItem.vendor,
+        cost: oldSpendingItem.cost,
+        description: oldSpendingItem.description);
   }
 }
