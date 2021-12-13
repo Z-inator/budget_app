@@ -3,44 +3,51 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SpendingItem {
-  final DocumentReference reference;
-  final DateTime createDate;
-  final String itemName;
-  final String store;
-  final double cost;
-  final String reason;
-  final String description;
+  String reference;
+  DateTime createDate;
+  String name;
+  String vendor;
+  double cost;
+  String description;
 
   SpendingItem({
-    required this.reference,
+    this.reference = '',
     required this.createDate,
-    required this.itemName,
-    required this.store,
-    required this.cost,
-    required this.reason,
-    required this.description,
+    this.name = '',
+    this.vendor = '',
+    this.cost = 0.0,
+    this.description = '',
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'createDate': createDate.millisecondsSinceEpoch,
-      'itemName': itemName,
-      'store': store,
+      'createDate': createDate,
+      'itemName': name,
+      'store': vendor,
       'cost': cost,
-      'reason': reason,
       'description': description,
     };
   }
 
   factory SpendingItem.fromMap(Map<String, dynamic> map, DocumentReference reference) {
     return SpendingItem(
-      reference: reference,
+      reference: reference.id,
       createDate: (map['createDate'] as Timestamp).toDate(),
-      itemName: map['itemName'],
-      store: map['store'],
+      name: map['itemName'],
+      vendor: map['store'],
       cost: map['cost'],
-      reason: map['reason'],
       description: map['description'],
     );
+  }
+
+  factory SpendingItem.copySpendingItem(SpendingItem oldSpendingItem) {
+    return SpendingItem(
+      reference: oldSpendingItem.reference,
+      createDate: oldSpendingItem.createDate,
+      name: oldSpendingItem.name,
+      vendor: oldSpendingItem.vendor,
+      cost: oldSpendingItem.cost,
+      description: oldSpendingItem.description
+    )
   }
 }
