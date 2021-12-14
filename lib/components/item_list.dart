@@ -72,7 +72,11 @@ class Item extends StatelessWidget {
             ),
             trailing: IconButton(
                 onPressed: () => showEditSheet(
-                    context: context, isNew: false, spendingItem: item),
+                    context: context,
+                    spendingItem: item,
+                    buttonLabel: 'Update!',
+                    saveItem:
+                        Provider.of<Database>(context).updateSpendingItem),
                 icon: Icon(Icons.edit_rounded)),
           )
         ],

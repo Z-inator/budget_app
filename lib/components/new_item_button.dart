@@ -1,28 +1,34 @@
-import 'package:budget_app/models/spending_item.dart';
-import 'package:budget_app/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'package:budget_app/models/spending_item.dart';
+import 'package:budget_app/services/firestore.dart';
 
 Future<dynamic> showEditSheet(
     {required BuildContext context,
-    required bool isNew,
+    required final String buttonLabel,
+    required final Function saveItem,
     required SpendingItem spendingItem}) {
   return showModalBottomSheet(
       context: context,
       builder: (context) => ChangeNotifierProvider<EditItemProvider>(
           create: (context) => EditItemProvider(spendingItem: spendingItem),
           builder: (context, child) =>
-              EditItemBottomSheet(isNew: isNew, spendingItem: spendingItem)));
+              EditItemBottomSheet(spendingItem: spendingItem, buttonLabel: buttonLabel, saveItem: saveItem,)));
 }
 
 class EditItemBottomSheet extends StatelessWidget {
-  final bool isNew;
   final SpendingItem spendingItem;
-  const EditItemBottomSheet(
-      {Key? key, required this.isNew, required this.spendingItem})
-      : super(key: key);
+  final String buttonLabel;
+  final Function saveItem;
+  const EditItemBottomSheet({
+    Key? key, 
+    required this.spendingItem,
+    required this.buttonLabel,
+    required this.saveItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +37,31 @@ class EditItemBottomSheet extends StatelessWidget {
     return Container(
       child: Column(
         children: [
+          Row(
+            children: [
+              Text('Edit'),
+              IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close_rounded))
+            ],
+          ),
           updateItemText(editItemProvider.updateSpendingItemName, 'Name'),
           updateItemText(editItemProvider.updateSpendingItemVendor, 'Vendor'),
           Row(
             children: [
               updateItemCost(editItemProvider.updateSpendingItemCost, 'Price'),
-              updateCreateDate(context, editItemProvider.updateSpendingItemCreateDate, DateFormat.yMMMMd('en_US').format(editItemProvider.spendingItem.createDate))
+              updateCreateDate(
+                  context,
+                  editItemProvider.updateSpendingItemCreateDate,
+                  DateFormat.yMMMMd('en_US')
+                      .format(editItemProvider.spendingItem.createDate))
             ],
           ),
           updateItemText(
               editItemProvider.updateSpendingItemName, 'Description'),
           OutlinedButton(
-              onPressed: () => isNew
-                  ? database.addSpendingItem(editItemProvider.spendingItem)
-                  : database.updateSpendingItem(editItemProvider.spendingItem),
-              child: Text('Add!'))
+              onPressed: () => saveItem(editItemProvider.spendingItem),
+              child: Text(buttonLabel))
         ],
       ),
     );

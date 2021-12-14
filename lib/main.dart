@@ -61,12 +61,17 @@ class HomePage extends StatelessWidget {
               builder: (context, child) {
                 return SafeArea(
                     child: Scaffold(
-                  appBar: MonthBudgetBar(),
-                  body: ItemList(items: items),
-                  floatingActionButton: FloatingActionButton(
-                    onPressed: () => showEditSheet(context: context, isNew: false, spendingItem: SpendingItem(createDate: DateTime.now())),
-                  )
-                ));
+                        appBar: MonthBudgetBar(),
+                        body: ItemList(items: items),
+                        floatingActionButton: FloatingActionButton(
+                          onPressed: () => showEditSheet(
+                              context: context,
+                              spendingItem:
+                                  SpendingItem(createDate: DateTime.now()),
+                              buttonLabel: 'Add!',
+                              saveItem: Provider.of<Database>(context)
+                                  .addSpendingItem),
+                        )));
               },
             );
           } else if (snapshot.hasError) {
