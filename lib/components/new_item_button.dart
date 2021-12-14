@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class EditItemButton extends StatelessWidget {
+  final bool isNew;
   final SpendingItem spendingItem;
-  const EditItemButton({Key? key, required this.spendingItem})
+  const EditItemButton(
+      {Key? key, required this.spendingItem, required this.isNew})
       : super(key: key);
 
   @override
@@ -18,29 +20,32 @@ class EditItemButton extends StatelessWidget {
           context: context,
           builder: (context) => ChangeNotifierProvider<EditItemProvider>(
               create: (context) => EditItemProvider(spendingItem: spendingItem),
-              child: EditSpendingItem())),
-    );
-  }
-}
-
-class EditSpendingItem extends StatelessWidget {
-  const EditSpendingItem({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    EditItemProvider editItemProvider = Provider.of<EditItemProvider>(context);
-    Database database = Provider.of<Database>(context);
-    return Container(
-      child: Column(
-        children: [
-          updateItemText(editItemProvider.updateSpendingItemName, 'Name'),
-          updateItemText(editItemProvider.updateSpendingItemVendor, 'Vendor'),
-          updateItemCost(editItemProvider.updateSpendingItemCost, 'Price'),
-          updateItemText(
-              editItemProvider.updateSpendingItemName, 'Description'),
-          submitButton(editItemProvider, database)
-        ],
-      ),
+              builder: (context, child) {
+                EditItemProvider editItemProvider =
+                    Provider.of<EditItemProvider>(context);
+                Database database = Provider.of<Database>(context);
+                return Container(
+                  child: Column(
+                    children: [
+                      updateItemText(
+                          editItemProvider.updateSpendingItemName, 'Name'),
+                      updateItemText(
+                          editItemProvider.updateSpendingItemVendor, 'Vendor'),
+                      updateItemCost(
+                          editItemProvider.updateSpendingItemCost, 'Price'),
+                      updateItemText(editItemProvider.updateSpendingItemName,
+                          'Description'),
+                      OutlinedButton(
+                          onPressed: () => isNew
+                              ? database.addSpendingItem(
+                                  editItemProvider.spendingItem)
+                              : database.updateSpendingItem(
+                                  editItemProvider.spendingItem),
+                          child: Text('Add!'))
+                    ],
+                  ),
+                );
+              })),
     );
   }
 
@@ -62,14 +67,9 @@ class EditSpendingItem extends StatelessWidget {
           updateFunction(currencyFormat.format(double.parse(newText))),
     );
   }
-
-  Widget submitButton(EditItemProvider editItemProvider, Database database) {
-    return OutlinedButton(
-        onPressed: () =>
-            database.updateSpendingItem(editItemProvider.spendingItem),
-        child: Text('Add!'));
-  }
 }
+
+
 
 class EditItemProvider with ChangeNotifier {
   final SpendingItem spendingItem;

@@ -65,6 +65,7 @@ class HomePage extends StatelessWidget {
                   body: ItemList(items: items),
                   floatingActionButton: EditItemButton(
                     spendingItem: SpendingItem(createDate: DateTime.now()),
+                    isNew: true,
                   ),
                 ));
               },
