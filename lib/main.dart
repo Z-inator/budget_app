@@ -39,9 +39,9 @@ class _MyAppState extends State<MyApp> {
             return ErrorPage(errorMessage: snapshot.error.toString());
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return HomePage();
+            return const HomePage();
           }
-          return LoadingPage();
+          return const LoadingPage();
         },
       ),
     );
@@ -49,8 +49,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class HomePage extends StatelessWidget {
-  List<SpendingItem> items = [];
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +63,8 @@ class HomePage extends StatelessWidget {
               builder: (context, child) {
                 return SafeArea(
                     child: Scaffold(
-                        appBar: MonthBudgetBar(),
-                        body: ItemList(items: items),
+                        appBar: const MonthBudgetBar(),
+                        body: ItemList(items: Provider.of<Database>(context).getOrderedSpendingItems()),
                         floatingActionButton: FloatingActionButton(
                           onPressed: () => showEditSheet(
                               context: context,
@@ -80,7 +79,7 @@ class HomePage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return ErrorPage(errorMessage: snapshot.error.toString());
           }
-          return LoadingPage();
+          return const LoadingPage();
         });
   }
 }
@@ -108,7 +107,7 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
         child: Scaffold(
       body: CircularProgressIndicator(),
     ));
