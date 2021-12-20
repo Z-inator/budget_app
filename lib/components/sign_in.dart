@@ -29,7 +29,7 @@ class SignIn extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => NewUserStepper()))),
                   icon: const Image(
-                    image: AssetImage('Google-Logo.png'),
+                    image: AssetImage('assets/Google-Logo.png'),
                   )),
             ],
           ),
