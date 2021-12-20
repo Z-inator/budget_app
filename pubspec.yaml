@@ -18,12 +18,13 @@ dependencies:
   # Firebase plugins
   firebase_core: "^1.10.0"
   cloud_firestore: "^3.1.0"
+  firebase_auth: ^3.3.3
+  google_sign_in: ^5.2.1
   
   # Provider plugin
   provider: ^6.0.1
 
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.3
 
 dev_dependencies:
   flutter_test:
@@ -33,4 +34,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/Google-Logo.png
 
