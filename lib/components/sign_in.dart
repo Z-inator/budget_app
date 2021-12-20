@@ -20,7 +20,7 @@ class SignIn extends StatelessWidget {
               ),
               const Text('Please sign in to continue.'),
               IconButton(
-                  onPressed: () => Provider.of<AuthService>(context)
+                  onPressed: () => Provider.of<AuthService>(context, listen: false)
                       .signInWithGoogle()
                       .then((result) => ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(result))))
