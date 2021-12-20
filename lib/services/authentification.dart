@@ -4,10 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
-
-  User? get user {
-    return auth.currentUser;
-  }
+  User? user;
 
   Stream<User?> get onAuthChanged {
     return auth.idTokenChanges();
@@ -22,12 +19,12 @@ class AuthService {
     try {
       UserCredential userCredential =
           await auth.signInWithCredential(credential);
-      User? user = userCredential.user;
+      user = userCredential.user;
       if (userCredential.additionalUserInfo!.isNewUser && user != null) {
         FirebaseFirestore.instance
             .collection('users')
-            .doc(user.uid)
-            .set({'displayName': user.displayName});
+            .doc(user?.uid)
+            .set({'displayName': user?.displayName});
       }
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
@@ -46,5 +43,14 @@ class AuthService {
 
   Future signOut() async {
     return auth.signOut();
+  }
+
+  Future<void> buildNewUser(Map<String, dynamic> data) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .update(data)
+        .then((value) => print('Built new user'))
+        .catchError((error) => print('Failed to build new user: $error'));
   }
 }

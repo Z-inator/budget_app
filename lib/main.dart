@@ -1,3 +1,4 @@
+import 'package:budget_app/components/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -25,7 +26,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final Future<FirebaseApp> _initialization =
+      Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   @override
   Widget build(BuildContext context) {
@@ -53,33 +55,38 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = AuthService();
-    return StreamBuilder<User?>(
-        stream: authService.onAuthChanged,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ChangeNotifierProvider<Database>(
-              create: (context) => Database(user: snapshot.data!),
-              builder: (context, child) {
-                return SafeArea(
-                    child: Scaffold(
-                        appBar: const MonthBudgetBar(),
-                        body: ItemList(items: Provider.of<Database>(context).getOrderedSpendingItems()),
-                        floatingActionButton: FloatingActionButton(
-                          onPressed: () => showEditSheet(
-                              context: context,
-                              spendingItem:
-                                  SpendingItem(createDate: DateTime.now()),
-                              buttonLabel: 'Add!',
-                              saveItem: Provider.of<Database>(context)
-                                  .addSpendingItem),
-                        )));
-              },
-            );
-          } else if (snapshot.hasError) {
-            return ErrorPage(errorMessage: snapshot.error.toString());
-          }
-          return const LoadingPage();
+    return Provider(
+        create: (context) => AuthService(),
+        builder: (context, child) {
+          return StreamBuilder<User?>(
+              stream: Provider.of<AuthService>(context).onAuthChanged,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ChangeNotifierProvider<Database>(
+                    create: (context) => Database(user: snapshot.data!),
+                    builder: (context, child) {
+                      return SafeArea(
+                          child: Scaffold(
+                              appBar: const MonthBudgetBar(),
+                              body: ItemList(
+                                  items: Provider.of<Database>(context)
+                                      .getOrderedSpendingItems()),
+                              floatingActionButton: FloatingActionButton(
+                                onPressed: () => showEditSheet(
+                                    context: context,
+                                    spendingItem: SpendingItem(
+                                        createDate: DateTime.now()),
+                                    buttonLabel: 'Add!',
+                                    saveItem: Provider.of<Database>(context)
+                                        .addSpendingItem),
+                              )));
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return ErrorPage(errorMessage: snapshot.error.toString());
+                }
+                return const SignIn();
+              });
         });
   }
 }
@@ -109,7 +116,7 @@ class LoadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SafeArea(
         child: Scaffold(
-      body: CircularProgressIndicator(),
+      body: Center(child: CircularProgressIndicator()),
     ));
   }
 }
