@@ -71,8 +71,10 @@ class _NewUserStepperState extends State<NewUserStepper> {
               _index += 1;
             });
           } else {
-            Provider.of<AuthService>(context).buildNewUser(
-                {'createDate': startDate, 'monthlySpending': spendingAmount});
+            Provider.of<AuthService>(context).buildNewUser({
+                  'createDate': startDate, 
+                  'monthlySpending': spendingAmount,
+                });
             Navigator.pop(context);
           }
         },
