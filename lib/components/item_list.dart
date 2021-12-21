@@ -13,8 +13,6 @@ class ItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SpendingItem> items =
-        Provider.of<Database>(context).getOrderedSpendingItems();
     return ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) => Item(
@@ -59,7 +57,13 @@ class Item extends StatelessWidget {
         leading: Row(
           children: [
             Icon(Icons.attach_money_rounded, color: Colors.greenAccent),
-            Text(NumberFormat('#,##0.00', 'en_US').format(item.cost))
+            Text(
+              NumberFormat('#,##0.00', 'en_US').format(item.cost),
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: item.cost < 0 ? Colors.green : Colors.red),
+            )
           ],
         ),
         title: Text(item.name),
