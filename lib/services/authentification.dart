@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -27,6 +29,7 @@ class AuthService {
             .set({'displayName': user?.displayName});
       }
     } on FirebaseAuthException catch (error) {
+      log(error.toString());
       switch (error.code) {
         case 'account-exists-with-different-credential':
           return 'The account already exists using a different register method';
